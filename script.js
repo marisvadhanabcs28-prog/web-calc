@@ -1,50 +1,31 @@
 
+let display = document.getElementById("display");
+
 function addValue(value) {
-    document.getElementById("display").value += value;
+    display.value += value;
 }
 
 function clearDisplay() {
-    document.getElementById("display").value = "";
-}
-
-function add(a, b) {
-    return a + b;
-}
-
-function subtract(a, b) {
-    return a - b;
-}
-
-function multiply(a, b) {
-    return a * b;
-}
-
-function divide(a, b) {
-    if (b === 0) {
-        return "Cannot divide by zero";
-    }
-    return a / b;
+    display.value = "";
 }
 
 function calculate() {
-    let display = document.getElementById("display");
-
     try {
-        let expression = display.value;
+        let exp = display.value;
 
-        if (!expression || !/^[0-9+\-*/.()\s]+$/.test(expression)) {
+        if (!exp || !/^[0-9+\-*/.() ]+$/.test(exp)) {
             throw new Error();
         }
 
-        let result = Function('"use strict"; return (' + expression + ')')();
+        let result = Function("return " + exp)();
 
         if (!Number.isFinite(result)) {
-            display.value = "Cannot divide by zero";
+            display.value = "Error";
         } else {
             display.value = result;
         }
     } catch {
-        display.value = "Invalid input";
+        display.value = "Error";
     }
 }
 
@@ -52,17 +33,16 @@ function calculate() {
 document.addEventListener("keydown", function(event) {
     let key = event.key;
 
-    if (/^[0-9.+\-*/()]$/.test(key)) {
+    if (key >= "0" && key <= "9") {
         addValue(key);
-    } 
-    else if (key === "Enter" || key === "=") {
+    } else if (["+", "-", "*", "/", "."].includes(key)) {
+        addValue(key);
+    } else if (key === "Enter" || key === "=") {
+        event.preventDefault();
         calculate();
-    } 
-    else if (key === "Backspace") {
-        let display = document.getElementById("display");
+    } else if (key === "Backspace") {
         display.value = display.value.slice(0, -1);
-    } 
-    else if (key === "Escape") {
+    } else if (key === "Escape") {
         clearDisplay();
     }
 });
