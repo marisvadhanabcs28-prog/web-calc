@@ -32,7 +32,7 @@ function calculate() {
     try {
         let expression = display.value;
 
-        if (!/^[0-9+\-*/.()\s]+$/.test(expression)) {
+        if (!expression || !/^[0-9+\-*/.()\s]+$/.test(expression)) {
             throw new Error();
         }
 
@@ -47,3 +47,22 @@ function calculate() {
         display.value = "Invalid input";
     }
 }
+
+// Keyboard input
+document.addEventListener("keydown", function(event) {
+    let key = event.key;
+
+    if (/^[0-9.+\-*/()]$/.test(key)) {
+        addValue(key);
+    } 
+    else if (key === "Enter" || key === "=") {
+        calculate();
+    } 
+    else if (key === "Backspace") {
+        let display = document.getElementById("display");
+        display.value = display.value.slice(0, -1);
+    } 
+    else if (key === "Escape") {
+        clearDisplay();
+    }
+});
